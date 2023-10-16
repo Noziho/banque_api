@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\BankAccount;
 use App\Entity\Client;
+use App\Repository\BankAccountRepository;
 use App\Repository\ClientRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -79,6 +81,47 @@ class ClientController extends AbstractController
         );
 
         $em->persist($updatedClient);
+        $em->flush();
+        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
+    }
+
+    #[Route('/api/client/{currentAccount}/{targetAccount}/{value}', name: "app_client_payment", methods: ['PUT'])]
+    public function payment
+    (BankAccount $currentAccount,
+     BankAccount $targetAccount,
+     EntityManagerInterface $em,
+     float $value
+    ):JsonResponse
+    {
+        $currentAccount->setAmount($currentAccount->getAmount() - $value);
+        $targetAccount->setAmount($targetAccount->getAmount() + $value);
+
+        $em->flush();
+        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
+    }
+
+    #[Route('/api/client/{currentAccount}/{value}', name: "app_client_deposit", methods: ['PUT'])]
+    public function deposit
+    (BankAccount $currentAccount,
+     EntityManagerInterface $em,
+     float $value
+    ):JsonResponse
+    {
+        $currentAccount->setAmount($currentAccount->getAmount() + $value);
+
+        $em->flush();
+        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
+    }
+
+    #[Route('/api/client/{currentAccount}/{value}', name: "app_client_deposit", methods: ['PUT'])]
+    public function withdrawal
+    (BankAccount $currentAccount,
+     EntityManagerInterface $em,
+     float $value
+    ):JsonResponse
+    {
+        $currentAccount->setAmount($currentAccount->getAmount() - $value);
+
         $em->flush();
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
