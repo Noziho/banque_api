@@ -106,33 +106,17 @@ class BankAccountController extends AbstractController
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
-//    #[Route('/api/book/searchYear/{year}', name: 'app_book_search_year', methods: ['GET'])]
-//    public function getBookByYear
-//    (
-//        int $year,
-//        BookRepository $bookRepository,
-//        SerializerInterface $serializer
-//    ): JsonResponse
-//    {
-//        $books = $bookRepository->findAllGreaterThanYear($year);
-//
-//        $jsonBooks = $serializer->serialize($books, 'json', ['groups' => 'getBooks']);
-//
-//        return new JsonResponse($jsonBooks, Response::HTTP_OK, [], true);
-//    }
-//
-//    #[Route('/api/book/searchLowerYear/{year}', name: 'app_book_search_lower_year', methods: ['GET'])]
-//    public function getBookByLowerYear
-//    (
-//        int $year,
-//        BookRepository $bookRepository,
-//        SerializerInterface $serializer
-//    ): JsonResponse
-//    {
-//        $books = $bookRepository->findAllLowerThanYear($year);
-//
-//        $jsonBooks = $serializer->serialize($books, 'json', ['groups' => 'getBooks']);
-//
-//        return new JsonResponse($jsonBooks, Response::HTTP_OK, [], true);
-//    }
+    #[Route('/api/bank/find/{name}', name: 'app_bankaccount_findbyusername', methods: ['GET'])]
+    public function findByUserName
+    (string $name,
+     BankAccountRepository $bankRepository,
+     SerializerInterface $serializer
+    ): JsonResponse
+    {
+        $jsonBankAccount = $serializer->serialize
+        ($bankRepository->findByUserName($name), 'json', ['groups' => 'getBankAccounts']);
+
+        return new JsonResponse($jsonBankAccount, Response::HTTP_OK, [], true);
+    }
+
 }
