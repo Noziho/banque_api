@@ -6,6 +6,7 @@ use App\Entity\BankAccount;
 use App\Repository\BankAccountRepository;
 use App\Repository\ClientRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use phpDocumentor\Reflection\Types\AbstractList;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -117,6 +118,24 @@ class BankAccountController extends AbstractController
         ($bankRepository->findByUserName($name), 'json', ['groups' => 'getBankAccounts']);
 
         return new JsonResponse($jsonBankAccount, Response::HTTP_OK, [], true);
+    }
+
+    #[Route('/api/bank/interest/{id}', name: 'app_bankaccount_getinterestrate', methods: ['GET'])]
+    public function getInterestRate
+    (int $id,
+     BankAccountRepository $bankAccountRepository,
+     EntityManagerInterface $entityManager
+    ): JsonResponse
+    {
+        $bankAccount = $bankAccountRepository->find($id);
+        if ($bankAccount->getType() === "epargne"){
+            $bankAccount->setAmount($bankAccount->getAmount() * $bankAccount->getInterestRate() / 100);
+            $entityManager->persist($bankAccount);
+            $entityManager->flush();
+
+            return new JsonResponse(null, Response::HTTP_OK);
+        }
+        return new JsonResponse(null, Response::HTTP_OK);
     }
 
 }
