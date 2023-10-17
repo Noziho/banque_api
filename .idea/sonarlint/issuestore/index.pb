@@ -1,0 +1,21 @@
+
+@
+public/index.php,0/e/0e61f67641b441bb3ee38e903c594d99cafa14b4
+8
+.env.dev,b/f/bf56cccda2cc742301e3bcfd8204c4e7506242fb
+J
+src/Entity/BankAccount.php,8/c/8c0adab644a4f0bb269e3e37ae3daaa8f3f85e8a
+P
+ src/DataFixtures/AppFixtures.php,b/d/bd40e5504ff9d25586c516537316c24981df19f7
+E
+src/Entity/Client.php,8/0/80d2b022f4f64c82387061684f0426ad3c4a2596
+X
+(src/Controller/BankAccountController.php,a/5/a571c694950d9504d46984a28dee6cae8df19e8f
+S
+#src/Controller/ClientController.php,f/c/fc0cd58c284ab170c1a7983e115c305e0b938739
+S
+#src/Repository/ClientRepository.php,d/4/d4b865eabf84fe584860b3c01a08b6764a253582
+9
+	readme.md,2/7/275d783e298228506068436512433d343feb52aa
+X
+(src/Repository/BankAccountRepository.php,6/c/6c1639a341c9188223209f54fcf2bc47ba8ce1c8
