@@ -6,7 +6,6 @@ use App\Entity\BankAccount;
 use App\Repository\BankAccountRepository;
 use App\Repository\ClientRepository;
 use Doctrine\ORM\EntityManagerInterface;
-use phpDocumentor\Reflection\Types\AbstractList;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -78,13 +77,15 @@ class BankAccountController extends AbstractController
      ClientRepository $clientRepository,
     ): JsonResponse
     {
-        $ankAccount = $serializer->deserialize($request->getContent(), BankAccount::class, 'json');
+        $bankAccount = $serializer->deserialize($request->getContent(), BankAccount::class, 'json');
         $content = $request->toArray();
         $client = $clientRepository->find($content['clientId']);
-        $ankAccount->setClient($client);
-        $em->persist($ankAccount);
+        $bankAccount->setClient($client);
+        $em->persist($bankAccount);
         $em->flush();
-        return new JsonResponse('It works');
+
+        $jsonBankAccount = $serializer->serialize($bankAccount, 'json', ['groups' => 'getBankAccounts']);
+        return new JsonResponse($jsonBankAccount, Response::HTTP_OK, [], true);
     }
 
     #[Route('/api/bank/{id}', name: "update_bank_account", methods: ['PUT'])]
