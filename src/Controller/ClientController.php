@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
+use function PHPUnit\Framework\isInstanceOf;
 
 class ClientController extends AbstractController
 {
@@ -70,18 +71,21 @@ class ClientController extends AbstractController
     (
         Request $request,
         SerializerInterface $serializer,
-       Client $currentClient,
         EntityManagerInterface $em,
+        Client $currentClient = null,
     ): JsonResponse
     {
-        $updatedClient = $serializer->deserialize($request->getContent(),
-            Client::class,
-            'json',
-            [AbstractNormalizer::OBJECT_TO_POPULATE => $currentClient]
-        );
+        if ($currentClient instanceof Client) {
+            $updatedClient = $serializer->deserialize($request->getContent(),
+                Client::class,
+                'json',
+                [AbstractNormalizer::OBJECT_TO_POPULATE => $currentClient]
+            );
 
-        $em->persist($updatedClient);
-        $em->flush();
-        return new JsonResponse(null, Response::HTTP_NO_CONTENT);
+            $em->persist($updatedClient);
+            $em->flush();
+            return new JsonResponse(['message' => 'sucessful edited'],Response::HTTP_OK);
+        }
+        return new JsonResponse(['message' => 'Error client not found'], Response::HTTP_NOT_FOUND);
     }
 }

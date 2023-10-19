@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\BankAccount;
+use App\Entity\Client;
 use App\Repository\BankAccountRepository;
 use App\Repository\ClientRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -108,15 +109,17 @@ class BankAccountController extends AbstractController
         return new JsonResponse(null, Response::HTTP_NO_CONTENT);
     }
 
-    #[Route('/api/bank/find/{name}', name: 'app_bankaccount_findbyusername', methods: ['GET'])]
+    #[Route('/api/banks/find', name: 'app_bankaccount_findbyusername', methods: ['GET'])]
     public function findByUserName
-    (string $name,
+    (
      BankAccountRepository $bankRepository,
-     SerializerInterface $serializer
+     SerializerInterface $serializer,
+        Request $request
     ): JsonResponse
     {
+        $content = $request->toArray();
         $jsonBankAccount = $serializer->serialize
-        ($bankRepository->findByUserName($name), 'json', ['groups' => 'getBankAccounts']);
+        ($bankRepository->findByUserName($content['name']), 'json', ['groups' => 'getBankAccounts']);
 
         return new JsonResponse($jsonBankAccount, Response::HTTP_OK, [], true);
     }
